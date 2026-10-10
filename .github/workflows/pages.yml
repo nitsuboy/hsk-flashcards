@@ -1,0 +1,62 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Testes de integridade
+        run: |
+          node scripts/test-data.mjs
+          node scripts/test-texto.mjs
+          node scripts/test-scanner.mjs
+          node scripts/test-plano.mjs
+          node scripts/test-app.mjs
+          node scripts/test-audio.mjs
+          node --check flashcards/app.js
+
+      - name: Build dos artefatos derivados
+        run: node scripts/build-data.mjs
+
+      - name: Artefatos derivados em dia
+        run: git diff --exit-code
+
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir artefato
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
