@@ -10,7 +10,13 @@
   --warn: #e0a33e;
   --bad: #e05a5a;
   --radius: 12px;
-  --hanzi: "Noto Serif SC", "Songti SC", "SimSun", "Microsoft YaHei", serif;
+  --hanzi: "Douyin Sans Bold", "Noto Serif SC", "Songti SC", "SimSun", "Microsoft YaHei", serif;
+}
+
+@font-face {
+  font-family: "Douyin Sans Bold";
+  src: url("../DouyinSansBold.ttf") format("truetype");
+  font-display: swap;
 }
 
 * { box-sizing: border-box; }
