@@ -173,7 +173,7 @@
   function speakWeb(text, rate) {
     if (!webTtsOk) { STATUS_AUDIO = "fallback web desligado"; renderAudioStatus(); return; }
     try {
-      if (!audioEl) audioEl = new Audio();
+      if (!audioEl) { audioEl = new Audio(); audioEl.referrerPolicy = "no-referrer"; }
       audioEl.pause();
       audioEl.src = webTtsUrl(text, rate);
       audioEl.onerror = function () {

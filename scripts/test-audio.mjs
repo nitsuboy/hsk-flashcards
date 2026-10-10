@@ -68,6 +68,13 @@ function rodar(voices) {
     this.pause = () => {};
     this.play = () => { rec.played.push(this.src); return Promise.resolve(); };
   }
+  Audio.prototype.referrerPolicy = "";
+  const audioInst = [];
+  function AudioTracked() {
+    Audio.call(this);
+    audioInst.push(this);
+  }
+  AudioTracked.prototype = Audio.prototype;
 
   const sandbox = {
     document: document_,
@@ -83,7 +90,7 @@ function rodar(voices) {
       cancel() {},
     },
     SpeechSynthesisUtterance: function (t) { this.text = t; },
-    Audio,
+    Audio: AudioTracked,
     Blob: function (parts) { this.parts = parts; },
     URL: { createObjectURL: () => "blob:x", revokeObjectURL() {} },
     confirm: () => true,
@@ -98,7 +105,7 @@ function rodar(voices) {
   vm.createContext(sandbox);
   vm.runInContext(appJs, sandbox, { filename: "app.js" });
   byId.start.onclick();
-  return { byId, rec, sandbox };
+  return { byId, rec, sandbox, audioInst };
 }
 
 console.log("\n== caso 1: Mandarin instalado no sistema ==");
@@ -116,12 +123,15 @@ console.log("\n== caso 1: Mandarin instalado no sistema ==");
 
 console.log("\n== caso 2: so ingles no sistema (esta maquina) ==");
 {
-  const { byId, rec } = rodar([
+  const { byId, rec, audioInst } = rodar([
     { lang: "en-US", name: "Microsoft David Desktop" },
     { lang: "en-US", name: "Microsoft Zira Desktop" },
   ]);
   check("nao tenta falar com a voz inglesa", rec.spoken.length === 0, "spoken=" + JSON.stringify(rec.spoken));
   check("usa o fallback web", rec.played.length > 0, "urls=" + JSON.stringify(rec.played));
+  check("audio sem referer (evita 404 do Google)",
+    audioInst.length > 0 && audioInst.every((a) => a.referrerPolicy === "no-referrer"),
+    "referrerPolicy=" + audioInst.map((a) => a.referrerPolicy).join(","));
 
   const url = rec.played[0] || "";
   check("url do Google Translate", url.includes("translate_tts"), url);
