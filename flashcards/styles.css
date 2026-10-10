@@ -112,6 +112,13 @@ label.field {
   color: var(--muted);
 }
 
+label.field input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
 /* ---------- card ---------- */
 
 .card {

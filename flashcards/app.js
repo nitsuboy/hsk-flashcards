@@ -13,11 +13,13 @@
 
   var ITENS = DATA.itens;
   var KEY = "hsk1.progress.v1";
+  var PREFS_KEY = "hsk1.prefs.v1";
   var POR_FASE = 25; // 300 palavras / 12 fases de 25
 
   /* ---------------- estado ---------------- */
 
   var state = load();
+  var prefs = loadPrefs();
   var queue = [];
   var pos = 0;
   var revealed = false;
@@ -35,6 +37,20 @@
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* cota cheia */ }
   }
+
+  function loadPrefs() {
+    try {
+      var raw = localStorage.getItem(PREFS_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) { /* ignora storage corrompido */ }
+    return { pinyin: true };
+  }
+
+  function savePrefs() {
+    try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch (e) { /* cota cheia */ }
+  }
+
+  function pinyinEnabled() { return prefs.pinyin !== false; }
 
   function cardOf(id) {
     if (!state.cards[id]) {
@@ -294,7 +310,7 @@
           '<div class="pinyin" style="margin-top:10px">?</div></div>';
       }
       out = '<div class="hanzi">' + esc(it.hanzi) + "</div>";
-      out += '<div class="pinyin">' + esc(it.pinyin) + "</div>";
+      if (pinyinEnabled()) out += '<div class="pinyin">' + esc(it.pinyin) + "</div>";
     } else if (mode === "produce") {
       out = '<div class="prompt-pt">' + esc(it.gloss_pt) + "</div>";
       out += '<div class="pinyin" style="margin-top:8px">' +
@@ -320,8 +336,9 @@
     var out = '<div class="reveal">';
 
     out += '<div class="row spread"><div><span class="hanzi small">' +
-      esc(it.hanzi) + "</span> " +
-      '<span class="pinyin">' + esc(it.pinyin) + "</span></div>" +
+      esc(it.hanzi) + "</span>" +
+      (pinyinEnabled() ? ' <span class="pinyin">' + esc(it.pinyin) + "</span>" : "") +
+      "</div>" +
       '<div><button id="speakBtn" class="ghost">&#128266; Ouvir</button></div></div>';
 
     out += '<div class="blk"><div class="gloss">' + esc(it.gloss_pt) +
@@ -347,7 +364,7 @@
 
     var ex = it.exemplos.map(function (e) {
       return '<div class="ex"><div class="zh">' + esc(e.zh) + "</div>" +
-        '<div class="py">' + esc(e.py) + "</div>" +
+        (pinyinEnabled() ? '<div class="py">' + esc(e.py) + "</div>" : "") +
         '<div class="pt">' + esc(e.pt) + "</div></div>";
     }).join("");
     out += '<div class="blk"><h4>Exemplos</h4>' + ex + "</div>";
@@ -591,6 +608,17 @@
       pickVoice();
       speak("你好", 0.8);
     };
+
+    var pt = el("pinyinToggle");
+    if (pt) {
+      pt.checked = pinyinEnabled();
+      pt.onchange = function () {
+        prefs.pinyin = pt.checked;
+        savePrefs();
+        if (pt.blur) pt.blur();
+        render();
+      };
+    }
 
     document.addEventListener("keydown", function (e) {
       if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;

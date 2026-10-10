@@ -48,7 +48,8 @@ const ctx2d = new Proxy({}, { get: () => () => {} });
 
 const byId = {};
 for (const id of ["stats", "metaLine", "mode", "topic", "fase", "filter", "limit",
-                  "start", "reset", "testAudio", "audioStatus", "card", "bar", "writeHost"]) {
+                  "start", "reset", "testAudio", "audioStatus", "card", "bar", "writeHost",
+                  "pinyinToggle"]) {
   const e = new El(id === "card" ? "div" : (id === "start" || id === "reset" || id === "testAudio" ? "button" : "select"));
   e.id = id;
   if (id === "filter") e.value = "due";
@@ -56,6 +57,9 @@ for (const id of ["stats", "metaLine", "mode", "topic", "fase", "filter", "limit
   if (id === "mode") e.value = "recognize";
   byId[id] = e;
 }
+byId.pinyinToggle.checked = true;
+byId.pinyinToggle.blur = function () {};
+byId.pinyinToggle.onchange = null;
 
 const store = new Map();
 const listeners = {};
@@ -213,6 +217,35 @@ for (const m of ["recognize", "produce", "audio", "comp"]) {
       card.innerHTML.includes("ideograma"), card.innerHTML.slice(0, 200));
   }
 }
+
+console.log("\n== toggle de pinyin ==");
+mode.value = "recognize";
+byId.filter.value = "all";
+byId.limit.value = "20";
+byId.start.onclick();
+check("padrao: pinyin visivel no prompt", card.innerHTML.includes('<div class="pinyin">'),
+  card.innerHTML.slice(0, 300));
+
+byId.pinyinToggle.checked = false;
+byId.pinyinToggle.onchange();
+check("sem pinyin no prompt", !card.innerHTML.includes('<div class="pinyin">'),
+  card.innerHTML.slice(0, 300));
+check("pref desativado salvo",
+  store.has("hsk1.prefs.v1") && JSON.parse(store.get("hsk1.prefs.v1")).pinyin === false,
+  "prefs=" + (store.get("hsk1.prefs.v1") || "sem prefs"));
+
+keys.forEach((fn) => fn({ key: " ", target: { tagName: "BODY" }, preventDefault() {} }));
+check("reveal sem pinyin do hanzi", !card.innerHTML.includes('class="pinyin"'));
+check("exemplos sem pinyin (.py)", !card.innerHTML.includes('class="py"'));
+
+byId.pinyinToggle.checked = true;
+byId.pinyinToggle.onchange();
+check("pinyin volta ao revelar", card.innerHTML.includes('class="pinyin"'));
+check("pref reativado salvo", JSON.parse(store.get("hsk1.prefs.v1")).pinyin === true);
+
+keys.forEach((fn) => fn({ key: "3", target: { tagName: "BODY" }, preventDefault() {} }));
+check("pinyin volta no prompt", card.innerHTML.includes('<div class="pinyin">'),
+  card.innerHTML.slice(0, 300));
 
 console.log("\n== filtros ==");
 mode.value = "recognize";
