@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSK1 · Flashcards</title>
+<style>
+  :root {
+    --bg: #10131a; --panel: #181c26; --panel-2: #1f2430;
+    --line: #2a3040; --text: #e8ecf4; --muted: #8b95a9;
+    --accent: #5b9cf6; --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif; min-height: 100%; }
+  body { padding: 16px; }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 26px 0 8px; }
+  header h1 { font-size: 22px; font-weight: 650; margin: 0; letter-spacing: -0.2px; }
+  header small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 6px; }
+  .sub { color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 640px; }
+  .cta { display: flex; gap: 10px; flex-wrap: wrap; margin: 22px 0; }
+  .cta a {
+    font-family: inherit; font-size: 14px; font-weight: 600; text-decoration: none;
+    color: #08101f; background: var(--accent); border-radius: 8px; padding: 11px 18px;
+    display: inline-block;
+  }
+  .cta a.alt { color: var(--text); background: var(--panel); border: 1px solid var(--line); font-weight: 400; }
+  .cta a:hover { filter: brightness(1.08); }
+  ul.links { list-style: none; padding: 0; margin: 18px 0; }
+  ul.links li { border: 1px solid var(--line); background: var(--panel);
+    border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
+  ul.links a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 14px; }
+  ul.links p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+  footer { color: var(--muted); font-size: 12px; margin: 24px 0 40px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>HSK1<small>300 palavras · HSK 3.0 Nível 1</small></h1>
+  </header>
+
+  <p class="sub">Material de estudo em português para os 300 verbetes do HSK 3.0
+  Nível 1, com significado conceitual, análise de componentes, exemplos e
+  flashcards com repetição espaciada (SM-2).</p>
+
+  <div class="cta">
+    <a href="flashcards/">Abrir flashcards</a>
+    <a class="alt" href="PLANO-DE-ESTUDOS.md">Plano de estudos</a>
+    <a class="alt" href="RADICAIS.md">Radicais</a>
+  </div>
+
+  <ul class="links">
+    <li>
+      <a href="flashcards/">Flashcards (SRS)</a>
+      <p>Revisão diária com quatro modos: reconhecer, produzir, ouvir e
+      componentes. Escolha com o teclado e acompanhe seu progresso.</p>
+    </li>
+    <li>
+      <a href="PLANO-DE-ESTUDOS.md">Plano de estudos</a>
+      <p>Roadmap em 12 fases e a rotina diária de estudo de verdade.</p>
+    </li>
+    <li>
+      <a href="RADICAIS.md">Tabela de radicais</a>
+      <p>Os 190 componentes mais frequentes do dataset HSK1.</p>
+    </li>
+    <li>
+      <a href="anki/">Decks para o Anki</a>
+      <p>Arquivos TSV prontos para importar (hanzi → português e o inverso).</p>
+    </li>
+    <li>
+      <a href="README.md">README</a>
+      <p>Documentação completa: formato dos dados, scripts e como instalar a
+      voz Mandarin para áudio offline.</p>
+    </li>
+  </ul>
+
+  <footer>Progresso salvo no navegador (localStorage). Repositório no GitHub.</footer>
+</div>
+</body>
+</html>

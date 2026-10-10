@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSK1 · Flashcards</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>HSK1 <small id="metaLine">300 palavras</small></h1>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="toolbar">
+    <label class="field">Modo
+      <select id="mode">
+        <option value="recognize">Reconhecer (hanzi → sentido)</option>
+        <option value="produce">Produzir (sentido → hanzi)</option>
+        <option value="audio">Ouvir (som → hanzi)</option>
+        <option value="comp">Componentes (radicais)</option>
+      </select>
+    </label>
+
+    <label class="field">Tópico
+      <select id="topic"><option value="">Todos</option></select>
+    </label>
+
+    <label class="field">Fase
+      <select id="fase"><option value="">Todas as 12 fases</option></select>
+    </label>
+
+    <label class="field">Filtro
+      <select id="filter">
+        <option value="due">Revisão + novas</option>
+        <option value="new">Só novas</option>
+        <option value="dueOnly">Só revisões</option>
+        <option value="all">Todas (ignora agenda)</option>
+      </select>
+    </label>
+
+    <label class="field">Novas/sessão
+      <input type="number" id="limit" value="20" min="1" max="100"
+             style="width:62px;font-size:13px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 8px;">
+    </label>
+
+    <button class="primary" id="start">Iniciar</button>
+    <button class="ghost" id="testAudio">&#128266; Testar som</button>
+    <button class="ghost" id="reset">Zerar progresso</button>
+  </div>
+
+  <div class="audio-status" id="audioStatus">Som: verificando…</div>
+
+  <div class="bar"><i id="bar" style="width:0%"></i></div>
+
+  <div class="card" id="card" style="margin-top:14px"></div>
+
+  <div id="writeHost"></div>
+
+  <div class="hint">
+    <kbd>Espaço</kbd> revela · <kbd>1</kbd>–<kbd>4</kbd> avalia · <kbd>U</kbd> escreve · <kbd>R</kbd> som · <kbd>P</kbd> pula
+  </div>
+
+</div>
+
+<script src="../data/hsk1.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
